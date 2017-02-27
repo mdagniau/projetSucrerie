@@ -15,8 +15,8 @@ function getProduct(indexTab) {
             if (!isEmpty(response.error)) {
                 console.error("getReferences() - " + response.error);
             }
-            if (!isEmpty(response.data)) {               
-                var datas = response.data;                
+            if (!isEmpty(response.data)) {
+                var datas = response.data;
                 var index = 0;
                 //IF THIS IS NOT THE FIRST TIME
                 if (indexTab !== undefined) {
@@ -36,12 +36,72 @@ function getProduct(indexTab) {
 }
 
 
+//SEARCH REFERENCES FUNCTION
+function searchReferencesByJS(value) {
+    $.ajax({
+        type: "POST",
+        url: 'modele/produitModele.php',
+        dataType: "json",
+        data: {function: "getReferencesForAutocomplete",
+            data: value},
+        success: function (response) {
+            // Get the <datalist> and <input> elements.
+            var dataList = document.getElementById('references-datalist');
+            $('#references-datalist').empty();
+            var input = document.getElementById('reference_recherche_JS');
+
+            if (!isEmpty(response.error)) {
+                console.error("getReferencesForAutocomplete() - " + response.error);
+                input.placeholder = "Aucune occurence trouvée";
+            }
+            if (!isEmpty(response.data)) {
+                var datas = response.data;
+                console.log(datas);
+                datas.forEach(function (item) {
+                    // Create a new <option> element.
+                    var option = document.createElement('option');
+                    // Set the value using the item in the JSON array.
+                    option.value = item;
+                    // Add the <option> element to the <datalist>.
+                    dataList.appendChild(option);
+                });
+            }
+        },
+        error: function (erreur) {
+            console.error("Erreur lors de l'appel à searchReferences() " + erreur[0]);
+        }
+    });
+}
+
+//SEARCH REFERENCES FUNCTION
+function searchReferencesByJQuery(value) {
+    $.ajax({
+        type: "POST",
+        url: 'modele/produitModele.php',
+        dataType: "json",
+        data: {function: "getReferencesForAutocomplete",
+            data: value},
+        success: function (response) {
+            if (!isEmpty(response.data)) {
+                $('#reference_recherche_jQuery').autocomplete({
+                    source: response.data
+                });
+            }
+        },
+        error: function (erreur) {
+            console.error("Erreur lors de l'appel à searchReferences() " + erreur[0]);
+        }
+    });
+}
+
+
+
 function initialiseProductFiche(idProduct) {
     $.ajax({
         type: "POST",
         url: 'modele/produitModele.php',
         dataType: "json",
-        data: {function: "getProduct", reference: idProduct},
+        data: {function: "getProduct", reference: parseInt(idProduct)},
         success: function (response) {
             if (!isEmpty(response.error)) {
                 console.error("consulteProduitByReference() - " + response.error);
@@ -61,8 +121,8 @@ function getNextProduct() {
     //GET HIDDEN PROPERTIES
     var actualProduct = parseInt($('#indexTab').text());
     var nbRef = parseInt($('#nbRef').text());
-    
-    
+
+
     //THIS IS THE PRODUCT EXPECTED...
     var expectedProduct = actualProduct + 1;
     //BUT IF THE ACTUAL PRODUCT IS THE LAST OF THE ARRAY, THE EXPECTED PRODUCT IS THE FIRST OF THE ARRAY "REFERENCES"
@@ -76,7 +136,7 @@ function getNextProduct() {
 function getPreviousProduct() {
     var actualProduct = parseInt($('#indexTab').text());
     var nbRef = parseInt($('#nbRef').text());
-    
+
     //THIS IS THE PRODUCT EXPECTED
     var expectedProduct = actualProduct - 1;
     //BUT IF THE ACTUAL PRODUCT IS THE FIRST, THE EXPECTED PRODUCT IS THE LAST OF THE ARRAY "REFERENECES"
