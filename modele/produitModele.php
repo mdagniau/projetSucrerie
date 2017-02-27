@@ -16,7 +16,11 @@ if (!empty($function) || !(is_null($function))) {
         getReferences();
     } else if ($function == 'getProduct') {
         getProduct();
-    } else {
+    } else if ($function == 'getReferencesForAutocomplete'){
+        $dataToSearch  = filter_input(INPUT_POST, 'data');
+        getReferencesForAutocomplete($dataToSearch);
+    }
+    else {
         returnResult(null, "This function is not recognized.");
     }
 }
@@ -46,6 +50,11 @@ function getProduct() {
     }
 }
 
+function getReferencesForAutocomplete($data){
+    $allReferences = convertReferencesToJson(getReferencesForAuto($data));
+    returnResult($allReferences, null);
+}
+
 function getProductToJSON($reference) {
     $product = consulteProduitByReference($reference);
     $jsonProduct = convertProductToJson($product);
@@ -63,6 +72,13 @@ function listeProduits($msg, $parm = null) {
     $varQuery = "SELECT * FROM produit";
     $idRequete = executeRequete($cnx, $varQuery);
     return $idRequete;
+}
+
+function getReferencesForAuto($data){
+    $cnx = getBdd();
+    $varQuery = "SELECT reference FROM produit WHERE reference LIKE '$data%'";
+    $idRequete = executeRequete($cnx, $varQuery);
+    return $idRequete; 
 }
 
 function getListReferences() {
