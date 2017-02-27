@@ -33,15 +33,28 @@ require_once('router.php');
 
         <title>JS/PHP Project</title>
         <script src="include/libs/jquery-3.1.1.js" type="text/javascript"></script>
+        <script src="include/libs/jquery-ui.js" type="text/javascript"></script>
         <script src="include/libs/bootstrap.js" type="text/javascript"></script>
         <script src="controleur/common.js" type="text/javascript"></script>
         <link href="include/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <link href="include/css/styles.css" rel="stylesheet" type="text/css"/>
         <link href="include/css/demo.css" rel="stylesheet" type="text/css"/>
+        <link href="include/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <link href="include/css/jquery-ui.structure.css" rel="stylesheet" type="text/css"/>
+        <link href="include/css/jquery-ui.theme.css" rel="stylesheet" type="text/css"/>
     </head>
 
     <body class="index">
         <div class="col-md-12" style="height:50vh; margin-top: 5%">
+            <div class="col-md-12">
+                <span id="reference_label_recherche" class="col-md-4" style="font-weight: bold; margin-left:2%">Recherche d'un produit :</span>
+                <span class="col-md-4">
+                <input  type="text" style="color:black" id="reference_recherche_JS" onkeyup="searchReferencesByJS(value)"  onchange="initialiseProductFiche(value)"  list="references-datalist" placeholder="Javascript">
+                <datalist id="references-datalist"></datalist>
+                <input  type="text" style="color:black" id="reference_recherche_jQuery" onkeyup="searchReferencesByJQuery(value)" onchange="initialiseProductFiche(value)" placeholder="jQuery"></span>
+            </div>
+            <br/>
+            <br/>            
             <div class="col-md-12" style="background-color:white; color:#2c3e50; font-weight : bold; height:5vh;"><span style="margin-left:2%; font-size:3vh; vertical-align:middle">FICHE PRODUIT</span></div>
             <br/>
             <br/>
